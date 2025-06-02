@@ -1,0 +1,13 @@
+dependencies {
+    implementation(SpringBootLibs.WEB)
+    implementation(SpringBootLibs.WEB_FLUX)
+
+    implementation(SpringBootLibs.DATA_JPA)
+    implementation(SpringBootLibs.VALIDATION)
+    implementation(SpringBootLibs.SECURITY)
+    implementation(SpringBootLibs.QUARTZ)
+    implementation(SpringBootLibs.WEB_SOCKET)
+
+    testImplementation(SpringBootLibs.TEST)
+    testImplementation(SpringBootLibs.SECURITY_TEST)
+}

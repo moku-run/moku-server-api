@@ -1,0 +1,6 @@
+dependencies {
+    implementation(SpringSecurityLibs.JJWT_API)
+
+    runtimeOnly(SpringSecurityLibs.JJWT_IMPL)
+    runtimeOnly(SpringSecurityLibs.JJWT_JACKSON)
+}

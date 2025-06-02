@@ -1,0 +1,5 @@
+dependencies {
+    implementation(ReactorLibs.REACTIVE_STREAMS)
+    implementation(ReactorLibs.REACTOR_CORE)
+    runtimeOnly(ReactorLibs.NETTY_WITH_MAC_OS_AARCH)
+}

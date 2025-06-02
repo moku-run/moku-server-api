@@ -1,0 +1,27 @@
+server:
+  port: 18080
+
+spring:
+  profiles:
+    active: local
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      write-dates-as-timestamps: false
+
+  jpa:
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+logging:
+  level:
+    org.springframework.boot.web.embedded.tomcat: TRACE
+    org.springframework.web: TRACE
+    org.springframework.security: TRACE
+    org.springframework.security.web: TRACE
+#    org.springframework.messaging: DEBUG
+#    org.springframework.web.socket: DEBUG

@@ -1,0 +1,4 @@
+dependencies {
+    testImplementation(TestLibs.JUNIT5)
+    testRuntimeOnly(TestLibs.JUNIT_PLATFORM_LAUNCHER)
+}

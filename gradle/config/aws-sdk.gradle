@@ -1,0 +1,3 @@
+dependencies {
+    implementation(AwsLibs.AWS_SDK_S3)
+}

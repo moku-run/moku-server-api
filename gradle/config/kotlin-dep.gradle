@@ -1,0 +1,24 @@
+dependencies {
+    implementation(KotlinLibs.JACKSON_MODULE_KOTLIN)
+    implementation(KotlinLibs.KOTLIN_REFLECT)
+    implementation(KotlinLibs.COROUTINES)
+    implementation(KotlinLibs.COROUTINES_REACTOR)
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll(KotlinLibs.JSR305_STRICT_MODE)
+    }
+}
+
+noArg {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
+}
+
+allOpen {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
+}

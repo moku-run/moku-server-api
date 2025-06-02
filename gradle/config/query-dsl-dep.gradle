@@ -1,0 +1,9 @@
+dependencies {
+    implementation(QueryDslLibs.JPA_QUERY_DSL)
+    implementation(QueryDslLibs.APT_QUERY_DSL)
+    implementation(QueryDslLibs.PERSISTENCE)
+    implementation(QueryDslLibs.ANNOTATION)
+
+    kapt(QueryDslLibs.KAPT_QUERY_DSL)
+    kapt(QueryDslLibs.KAPT_CONFIG_PROCESSOR)
+}

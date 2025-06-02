@@ -1,0 +1,6 @@
+dependencies {
+    implementation(DatabaseLibs.FLYWAY_CORE)
+    implementation(DatabaseLibs.FLYWAY_MARIA_DB)
+
+    runtimeOnly(DatabaseLibs.MY_SQL_CONNECTOR)
+}
