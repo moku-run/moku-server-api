@@ -7,19 +7,20 @@ import org.springframework.web.bind.annotation.RestController
 import run.moku.framework.api.response.ApiResponse
 import run.moku.framework.security.auth.AuthenticationDTO
 import run.moku.modules.users.adapter.input.rest.query.dto.UserQueryResponse
+import run.moku.modules.users.adapter.input.rest.query.mapper.UserQueryMapper
+import run.moku.modules.users.application.ports.input.query.FetchUserInput
 
 @RestController
-class UserQueryApi {
+class UserQueryApi(
+    private val fetchInput: FetchUserInput,
+    private val mapper: UserQueryMapper,
+) {
 
-    @GetMapping("/api/users")
+    @GetMapping("/api/users/details")
     fun getUsers(
         @AuthenticationPrincipal auth: AuthenticationDTO
-    ): ResponseEntity<ApiResponse<UserQueryResponse.Get>> {
-        return ApiResponse.success(
-            payload = UserQueryResponse.Get(
-                nickname = auth.nickname,
-                loginId = auth.loginId,
-            )
-        )
-    }
+    ): ResponseEntity<ApiResponse<UserQueryResponse.Details>> = fetchInput
+        .fetchById(auth.id)
+        .let { mapper.convert(it) }
+        .let { ApiResponse.success(payload = it) }
 }

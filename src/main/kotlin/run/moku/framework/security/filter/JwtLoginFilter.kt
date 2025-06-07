@@ -5,6 +5,7 @@ import jakarta.annotation.PostConstruct
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -21,6 +22,7 @@ import run.moku.framework.security.auth.LoginDTO
 import run.moku.framework.security.auth.UserDetailsServiceAdapter
 import run.moku.framework.security.cookie.CookieService
 import run.moku.framework.security.jwt.JwtService
+import run.moku.framework.security.jwt.JwtValues
 
 @Component
 class JwtLoginFilter(
@@ -48,23 +50,19 @@ class JwtLoginFilter(
         chain: FilterChain?,
         authResult: Authentication?
     ) {
-
-        println("##########################")
         val user = authResult?.principal as? AuthenticationDTO
             ?: throw BadCredentialsException(ApiResponseCode.INVALID_CREDENTIALS.message)
 
         val token = jwtService.createToken(user.loginId)
-        val cookie = cookieService.createCookieAsString(jwtService.authorizationHeader(), token)
+        val cookie = cookieService.createCookieAsString(JwtValues.AUTHENTICATION_HEADER, token)
 
-        response?.addHeader("Set-Cookie", cookie)
+        response?.addHeader(HttpHeaders.SET_COOKIE, cookie)
 
         apiResponseService.writeResponse<Unit>(
             response = response,
-            success = true,
+            isSuccess = true,
             apiResponseCode = ApiResponseCode.OK,
         )
-
-        println("##################################$cookie")
     }
 
     override fun unsuccessfulAuthentication(
@@ -74,7 +72,7 @@ class JwtLoginFilter(
     ) {
         apiResponseService.writeResponse<Unit>(
             response = response,
-            success = false,
+            isSuccess = false,
             apiResponseCode = ApiResponseCode.INVALID_CREDENTIALS,
         )
     }

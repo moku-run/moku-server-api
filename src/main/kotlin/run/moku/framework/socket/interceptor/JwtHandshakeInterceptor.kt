@@ -6,13 +6,12 @@ import org.springframework.stereotype.Component
 import org.springframework.web.socket.WebSocketHandler
 import org.springframework.web.socket.server.HandshakeInterceptor
 import run.moku.framework.security.auth.UserDetailsServiceAdapter
-import run.moku.framework.security.cookie.CookieService
 import run.moku.framework.security.jwt.JwtService
+import run.moku.framework.security.jwt.JwtValues
 
 @Component
 class JwtHandshakeInterceptor(
     private val jwtService: JwtService,
-    private val cookieService: CookieService,
     private val userDetailsServiceAdapter: UserDetailsServiceAdapter
 ) : HandshakeInterceptor {
 
@@ -22,17 +21,20 @@ class JwtHandshakeInterceptor(
         wsHandler: WebSocketHandler,
         attributes: MutableMap<String, Any>
     ): Boolean {
-        val cookies = request.headers["cookie"] ?: return true
-
-        val token = cookies.flatMap { it.split(";") }
-            .map { it.trim() }
-            .firstOrNull { it.startsWith(jwtService.authorizationHeader()) }
-            ?.removePrefix(jwtService.authorizationHeader() + "=")
-
-        if (token != null && jwtService.validToken(token)) {
-            val username = jwtService.getUsername(token)
-            attributes[jwtService.authorizationHeader()] = userDetailsServiceAdapter.loadUserByUsername(username)
-        }
+        request
+            .headers["cookie"]
+            ?.let { cookie ->
+                cookie
+                    .flatMap { it.split(";") }
+                    .map { it.trim() }
+                    .firstOrNull { it.startsWith(JwtValues.AUTHENTICATION_HEADER) }
+                    ?.removePrefix(JwtValues.AUTHENTICATION_HEADER + "=")
+                    ?.takeIf { jwtService.validToken(it) }
+                    ?.let { jwtService.getUsername(it) }
+                    ?.let {
+                        attributes[JwtValues.AUTHENTICATION_HEADER] = userDetailsServiceAdapter.loadUserByUsername(it)
+                    }
+            }
 
         return true
     }

@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import run.moku.framework.security.auth.AuthenticationDTO
 import run.moku.framework.security.jwt.JwtService
+import run.moku.framework.security.jwt.JwtValues
 import java.util.UUID
 
 @Component
@@ -20,7 +21,7 @@ class JwtChannelInterceptor(
         val accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor::class.java)
 
         if (accessor != null && accessor.user == null) {
-            val sessionAttr = accessor.sessionAttributes?.get(jwtService.authorizationHeader()) as? AuthenticationDTO
+            val sessionAttr = accessor.sessionAttributes?.get(JwtValues.AUTHENTICATION_HEADER) as? AuthenticationDTO
 
             if (sessionAttr != null) {
                 val authToken = UsernamePasswordAuthenticationToken(sessionAttr, null, sessionAttr?.authorities)

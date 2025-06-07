@@ -1,25 +1,28 @@
 package run.moku.framework.security.jwt
 
 import org.springframework.stereotype.Service
-import run.moku.framework.security.auth.AuthenticationDTO
 
 @Service
 class JwtService(
-    private val properties: JwtProperties,
     private val creator: JwtCreator,
     private val parser: JwtParser,
+    private val validator: JwtValidator,
+    private val remover: JwtRemover,
 ) {
 
-    fun createToken(username: String): String = creator.create(username)
+    fun createToken(username: String): String =
+        creator.create(
+            mutableMapOf(
+                JwtValues.USERNAME_KEY to username,
+            )
+        )
 
-    fun validToken(token: String?): Boolean {
-        println("token: ${token}")
+    fun validToken(token: String): Boolean =
+        validator.validate(token)
 
-        return true
-    }
+    fun getUsername(token: String): String? =
+        parser.getUsername(token)
 
-    fun getUsername(token: String): String = parser
-        .getClaims(token)[JwtValues.USERNAME_KEY] as String
-
-    fun authorizationHeader(): String = JwtValues.AUTHENTICATION_HEADER
+    fun remove(token: String) =
+        remover.remove(token)
 }

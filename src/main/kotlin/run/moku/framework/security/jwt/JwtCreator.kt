@@ -9,20 +9,15 @@ import java.util.*
 class JwtCreator(
     private val jwtProperties: JwtProperties,
 ) {
-
-    fun create(username: String): String {
+    fun create(claims: Map<String, *>): String {
         val now = Instant.now()
 
         return Jwts.builder()
-            .claims(
-                mapOf(
-                    JwtValues.USERNAME_KEY to username
-                ),
-            )
-            .expiration(Date.from(now.plusSeconds(jwtProperties.expired)))
+            .claims(claims)
             .issuedAt(Date.from(now))
-            .issuer(jwtProperties.issuer)
+            .expiration(Date.from(now.plusSeconds(jwtProperties.expired)))
             .signWith(jwtProperties.getSecretKey())
+            .issuer(jwtProperties.issuer)
             .compact()
     }
 }

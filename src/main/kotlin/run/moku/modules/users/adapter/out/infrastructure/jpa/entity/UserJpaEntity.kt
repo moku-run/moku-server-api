@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import run.moku.framework.jpa.entity.BaseJpaEntity
 import run.moku.framework.jpa.entity.validateSelf
+import run.moku.modules.users.application.usecase.query.FetchUserModel
+import run.moku.modules.users.domain.entity.UserId
 import run.moku.modules.users.domain.entity.UserLoginId
 import run.moku.modules.users.domain.entity.UserNickname
 import run.moku.modules.users.domain.value.UserPassword
@@ -42,6 +44,27 @@ class UserJpaEntity(
     var role: UserRole = UserRole.PLAYER
 
 ) : BaseJpaEntity() {
+
+    fun convert(): FetchUserModel {
+        return FetchUserModel(
+            userId = createUserId(),
+            userLoginId = createUserLoginId(),
+            userNickname = createUserNickname(),
+            role = this.role
+        )
+    }
+
+    fun createUserId(): UserId {
+        return UserId.of(this.id!!)
+    }
+
+    fun createUserLoginId(): UserLoginId {
+        return UserLoginId.of(this.loginId)
+    }
+
+    fun createUserNickname(): UserNickname {
+        return UserNickname.of(this.nickname)
+    }
 
     init {
         validateSelf()

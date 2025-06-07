@@ -21,14 +21,10 @@ import java.sql.SQLException
 class ApiExceptionAdvice {
 
     @ExceptionHandler(ApiException::class)
-    fun handleApiException(e: ApiException): ResponseEntity<ApiResponse<String>> {
+    fun handleApiException(e: ApiException): ResponseEntity<ApiResponse<Any>> {
         log().info("ApiResponseCode: ${e.getApiResponseCode()}, Message: ${e.message()} Status: ${e.status()}")
 
-        return ApiResponse.clientError(
-            status = e.status(),
-            message = e.message(),
-            code = e.code()
-        )
+        return ApiResponse.clientError(e.getApiResponseCode(), e.payload)
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
@@ -44,7 +40,7 @@ class ApiExceptionAdvice {
         }
 
         return ApiResponse.clientError(
-            apiResponseCode = ApiResponseCode.CLIENT_INVALID_REQUEST,
+            apiResponseCode = ApiResponseCode.REQUEST_INVALID,
             payload = response
         )
     }
@@ -61,7 +57,7 @@ class ApiExceptionAdvice {
         }
 
         return ApiResponse.clientError(
-            apiResponseCode = ApiResponseCode.CLIENT_INVALID_DATA,
+            apiResponseCode = ApiResponseCode.REQUEST_INVALID_DATA,
             payload = response,
         )
     }
@@ -71,7 +67,7 @@ class ApiExceptionAdvice {
         log().info("HttpMessageNotReadableException ${e.message}")
 
         return ApiResponse.clientError(
-            apiResponseCode = ApiResponseCode.CLIENT_INVALID_BODY,
+            apiResponseCode = ApiResponseCode.REQUEST_INVALID_BODY,
             payload = "${e.message}",
         )
     }
@@ -81,7 +77,7 @@ class ApiExceptionAdvice {
         log().info("${e.body.detail}")
 
         return ApiResponse.clientError(
-            apiResponseCode = ApiResponseCode.CLIENT_MISSING_HEADER,
+            apiResponseCode = ApiResponseCode.REQUEST_MISSING_HEADER,
             payload = "${e.body.detail}",
         )
     }
@@ -94,7 +90,7 @@ class ApiExceptionAdvice {
         log().info("Method: ${e.method} End-Point: ${request.requestURI}")
 
         return ApiResponse.clientError(
-            apiResponseCode = ApiResponseCode.CLIENT_UNSUPPORTED_METHOD,
+            apiResponseCode = ApiResponseCode.REQUEST_UNSUPPORTED_METHOD,
             payload = "${e.method} ${request.requestURI} ${e.message}",
         )
     }
@@ -103,10 +99,11 @@ class ApiExceptionAdvice {
     fun handleNoResourceFoundException(
         e: NoResourceFoundException
     ): ResponseEntity<ApiResponse<String>> {
-        log().info("End-Point: ${e.resourcePath} Message: ${e.message}")
+
+        log().info("Method: ${e.httpMethod} End-Point: ${e.resourcePath} Message: ${e.message}")
 
         return ApiResponse.clientError(
-            apiResponseCode = ApiResponseCode.CLIENT_UNSUPPORTED_REQUEST,
+            apiResponseCode = ApiResponseCode.REQUEST_UNSUPPORTED_REQUEST,
             payload = "API: /${e.resourcePath}, Message: ${e.message}",
         )
     }
