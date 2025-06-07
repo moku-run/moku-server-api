@@ -99,7 +99,8 @@ class ApiExceptionAdvice {
     fun handleNoResourceFoundException(
         e: NoResourceFoundException
     ): ResponseEntity<ApiResponse<String>> {
-        log().info("End-Point: ${e.resourcePath} Message: ${e.message}")
+
+        log().info("Method: ${e.httpMethod} End-Point: ${e.resourcePath} Message: ${e.message}")
 
         return ApiResponse.clientError(
             apiResponseCode = ApiResponseCode.REQUEST_UNSUPPORTED_REQUEST,
