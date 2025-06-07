@@ -2,7 +2,7 @@ package run.moku.modules.users.adapter.out.infrastructure.jpa.mapper
 
 import org.springframework.stereotype.Service
 import run.moku.modules.users.adapter.out.infrastructure.jpa.entity.UserJpaEntity
-import run.moku.modules.users.domain.model.UserSignUpModel
+import run.moku.modules.users.application.usecase.command.signup.model.UserSignUpModel
 
 @Service
 class UserCommandMapper {

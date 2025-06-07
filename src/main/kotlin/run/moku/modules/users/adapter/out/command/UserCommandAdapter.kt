@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 import run.moku.modules.users.adapter.out.infrastructure.jpa.command.UserCommandRepository
 import run.moku.modules.users.adapter.out.infrastructure.jpa.mapper.UserCommandMapper
 import run.moku.modules.users.application.ports.out.command.UserCommandPort
-import run.moku.modules.users.domain.model.UserSignUpModel
+import run.moku.modules.users.application.usecase.command.signup.model.UserSignUpModel
 
 @Service
 class UserCommandAdapter(
