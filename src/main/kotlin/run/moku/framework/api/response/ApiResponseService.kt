@@ -15,7 +15,7 @@ class ApiResponseService(
 
     fun <T> writeResponse(
         response: HttpServletResponse?,
-        success: Boolean,
+        isSuccess: Boolean,
         apiResponseCode: ApiResponseCode,
         payload: T? = null
     ) {
@@ -23,13 +23,11 @@ class ApiResponseService(
             status = apiResponseCode.status.value()
             writer.write(
                 objectMapper.writeValueAsString(
-                    ApiResponse.of(
-                        success = success,
-                        status = apiResponseCode.status,
-                        message = apiResponseCode.message,
-                        code = apiResponseCode.code,
+                    ApiResponse.ofDTO(
+                        success = isSuccess,
+                        apiCode = apiResponseCode,
                         payload = payload
-                    ).body
+                    )
                 )
             )
         }

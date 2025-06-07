@@ -9,11 +9,21 @@ enum class ApiResponseCode(
     val message: String,
 ) {
 
+
     OK("S001", HttpStatus.OK, "리소스 요청에 성공했습니다."),
     CREATED("S002", HttpStatus.CREATED, "리소스 생성 요청에 성공했습니다."),
     UPDATED("S003", HttpStatus.OK, "리소스 수정 요청에 성공했습니다."),
     DELETED("S004", HttpStatus.OK, "리소스 삭제 요청에 성공했습니다."),
     SUCCESS_CREDENTIALS("S005", HttpStatus.OK, "인증에 성공했습니다."),
+
+
+    /* CLIENT */
+    REQUEST_INVALID("CR001", HttpStatus.BAD_REQUEST, "유효성 검증에 실패했습니다."),
+    REQUEST_INVALID_DATA("CR002", HttpStatus.BAD_REQUEST, "유효하지 않은 데이터입니다."),
+    REQUEST_INVALID_BODY("CR003", HttpStatus.BAD_REQUEST, "요청 바디가 잘못되었습니다."),
+    REQUEST_MISSING_HEADER("CR004", HttpStatus.BAD_REQUEST, "필수 헤더가 누락되었습니다."),
+    REQUEST_UNSUPPORTED_METHOD("CR005", HttpStatus.BAD_REQUEST, "지원하지 않는 HTTP 메서드입니다."),
+    REQUEST_UNSUPPORTED_REQUEST("CR006", HttpStatus.BAD_REQUEST, "지원하지 않는 요청입니다."),
 
 
     /* SECURITY */
@@ -24,15 +34,6 @@ enum class ApiResponseCode(
     API_ACCESS_DENIED("SC005", HttpStatus.FORBIDDEN, "권한이 없습니다."),
 
 
-    /* CLIENT */
-    CLIENT_INVALID_REQUEST("CC001", HttpStatus.BAD_REQUEST, "유효성 검증에 실패했습니다."),
-    CLIENT_INVALID_DATA("CC002", HttpStatus.BAD_REQUEST, "유효하지 않은 데이터입니다."),
-    CLIENT_INVALID_BODY("CC003", HttpStatus.BAD_REQUEST, "요청 바디가 잘못되었습니다."),
-    CLIENT_MISSING_HEADER("CC004", HttpStatus.BAD_REQUEST, "필수 헤더가 누락되었습니다."),
-    CLIENT_UNSUPPORTED_METHOD("CC005", HttpStatus.BAD_REQUEST, "지원하지 않는 HTTP 메서드입니다."),
-    CLIENT_UNSUPPORTED_REQUEST("CC006", HttpStatus.BAD_REQUEST, "지원하지 않는 요청입니다."),
-
-
     /* USER */
     DUPLICATE_LOGIN_ID("U001", HttpStatus.CONFLICT, "이미 존재하는 로그인 아이디입니다."),
     DUPLICATE_NICKNAME("U002", HttpStatus.CONFLICT, "이미 존재하는 닉네임입니다."),
@@ -41,12 +42,20 @@ enum class ApiResponseCode(
 
 
     /* Board */
-    BOARD_INVALID_ROW_SIZE("B001", HttpStatus.BAD_REQUEST,"바둑판 사이즈는 ${MokuBoard.DEFAULT_INDEX}x${MokuBoard.DEFAULT_INDEX} 입니다."),
-    BOARD_INVALID_COL_SIZE("B002", HttpStatus.BAD_REQUEST,"바둑판 사이즈는 ${MokuBoard.DEFAULT_INDEX}x${MokuBoard.DEFAULT_INDEX} 입니다."),
+    BOARD_INVALID_ROW_SIZE(
+        "B001",
+        HttpStatus.BAD_REQUEST,
+        "바둑판 사이즈는 ${MokuBoard.DEFAULT_INDEX}x${MokuBoard.DEFAULT_INDEX} 입니다."
+    ),
+    BOARD_INVALID_COL_SIZE(
+        "B002",
+        HttpStatus.BAD_REQUEST,
+        "바둑판 사이즈는 ${MokuBoard.DEFAULT_INDEX}x${MokuBoard.DEFAULT_INDEX} 입니다."
+    ),
 
 
     /* PLAY */
-    PLAY_INVALID_TURN("P001", HttpStatus.BAD_REQUEST,"차례가 아닙니다."),
+    PLAY_INVALID_TURN("P001", HttpStatus.BAD_REQUEST, "차례가 아닙니다."),
 
 
     /* SERVER */
