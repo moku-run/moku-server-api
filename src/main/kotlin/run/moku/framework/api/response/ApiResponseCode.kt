@@ -29,9 +29,8 @@ enum class ApiResponseCode(
     /* SECURITY */
     INVALID_CREDENTIALS("SC001", HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
     AUTHENTICATION_REQUIRED("SC002", HttpStatus.UNAUTHORIZED, "인증되지 않았습니다."),
-    ACCESS_DENIED("SC003", HttpStatus.FORBIDDEN, "권한이 없습니다."),
+    API_ACCESS_DENIED("SC003", HttpStatus.FORBIDDEN, "권한이 없습니다."),
     SUCCESS_CREDENTIALS_ADMIN("SC004", HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
-    API_ACCESS_DENIED("SC005", HttpStatus.FORBIDDEN, "권한이 없습니다."),
 
 
     /* USER */

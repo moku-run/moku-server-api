@@ -7,6 +7,7 @@ import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.stereotype.Component
 import run.moku.framework.api.response.ApiResponseCode
 import run.moku.framework.api.response.ApiResponseService
+import run.moku.framework.log.log
 
 @Component
 class ApiAuthenticationEntryPoint(
@@ -17,12 +18,12 @@ class ApiAuthenticationEntryPoint(
         response: HttpServletResponse?,
         authException: AuthenticationException?
     ) {
-        println(authException)
-        println("ApiAuthenticationEntryPoint")
+        log().info("$authException")
+
         apiResponseService.writeResponse<Unit>(
             response = response,
             isSuccess = false,
-            apiResponseCode = ApiResponseCode.API_ACCESS_DENIED
+            apiResponseCode = ApiResponseCode.AUTHENTICATION_REQUIRED
         )
     }
 }

@@ -24,10 +24,6 @@ class JwtAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val cookies= request.cookies
-
-        println(cookies)
-
         request
             .let { cookieService.getCookieValue(it, JwtValues.AUTHENTICATION_HEADER) }
             ?.takeIf { jwtService.validToken(it) }
@@ -35,7 +31,7 @@ class JwtAuthenticationFilter(
             ?.let { userDetailsServiceAdapter.loadUserByUsername(it) }
             ?.let {
                 saveAuthentication(
-                    UsernamePasswordAuthenticationToken(it, null)
+                    UsernamePasswordAuthenticationToken(it, null, it.authorities)
                 )
             }
 
