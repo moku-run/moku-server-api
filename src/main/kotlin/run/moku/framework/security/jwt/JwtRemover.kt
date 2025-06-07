@@ -9,10 +9,11 @@ class JwtRemover(
     private val cacheService: CacheService
 ) {
 
-    fun remove(token: String) = cacheService.save(
-        CacheDto(
-            key = token,
-            value = JwtValues.BLACK_LIST
+    fun remove(token: String) =
+        cacheService.save(
+            CacheDto(
+                key = token,
+                value = JwtValues.BLACK_LIST
+            )
         )
-    )
 }

@@ -27,9 +27,8 @@ class CorsSecurity {
 
     companion object {
         private val ALLOWED_ORIGIN = listOf(
-            "https://dev-lkdcode.moku.run",
-            "https://dev-lkdcode.moku.run:14000",
             "https://dev-lkdcode.moku.run:13000",
+            "https://localhost:14000",
         )
 
         //        private val ALLOWED_HEADER = listOf("Content-Type", "Authorization", "X-Requested-With")

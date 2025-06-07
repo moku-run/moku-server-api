@@ -5,14 +5,24 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.stereotype.Component
+import run.moku.framework.api.response.ApiResponseCode
+import run.moku.framework.api.response.ApiResponseService
 
 @Component
-class BaseAuthenticationEntryPoint : AuthenticationEntryPoint {
+class ApiAuthenticationEntryPoint(
+    private val apiResponseService: ApiResponseService
+) : AuthenticationEntryPoint {
     override fun commence(
         request: HttpServletRequest?,
         response: HttpServletResponse?,
         authException: AuthenticationException?
     ) {
-        println("BaseAuthenticationEntryPoint")
+        println(authException)
+        println("ApiAuthenticationEntryPoint")
+        apiResponseService.writeResponse<Unit>(
+            response = response,
+            isSuccess = false,
+            apiResponseCode = ApiResponseCode.API_ACCESS_DENIED
+        )
     }
 }

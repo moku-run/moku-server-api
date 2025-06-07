@@ -10,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 import run.moku.framework.security.auth.UserDetailsServiceAdapter
 import run.moku.framework.security.cookie.CookieService
 import run.moku.framework.security.jwt.JwtService
+import run.moku.framework.security.jwt.JwtValues
 
 @Component
 class JwtAuthenticationFilter(
@@ -23,14 +24,18 @@ class JwtAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
+        val cookies= request.cookies
+
+        println(cookies)
+
         request
-            .let { cookieService.getCookieValue(it, jwtService.authorizationHeader()) }
-            .takeIf { jwtService.validToken(it) }
+            .let { cookieService.getCookieValue(it, JwtValues.AUTHENTICATION_HEADER) }
+            ?.takeIf { jwtService.validToken(it) }
             ?.let { jwtService.getUsername(it) }
+            ?.let { userDetailsServiceAdapter.loadUserByUsername(it) }
             ?.let {
-                val authenticationToken = userDetailsServiceAdapter.loadUserByUsername(it)
                 saveAuthentication(
-                    UsernamePasswordAuthenticationToken(authenticationToken, null)
+                    UsernamePasswordAuthenticationToken(it, null)
                 )
             }
 
