@@ -1,4 +1,4 @@
-package run.moku.modules.users.domain.model
+package run.moku.modules.users.application.usecase.command.signup.model
 
 import run.moku.modules.users.domain.entity.UserLoginId
 import run.moku.modules.users.domain.entity.UserNickname
