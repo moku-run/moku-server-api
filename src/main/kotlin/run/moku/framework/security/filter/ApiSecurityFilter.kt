@@ -47,6 +47,7 @@ class ApiSecurityFilter(
 
         private val PERMIT_ALL_API = arrayOf(
             "/",
+            "/api/users/sign-up",
             "/api/logout", "/api/login",
         )
 
