@@ -1,9 +1,6 @@
-server:
-  port: 17070
-
 spring:
   profiles:
-    active: dev
+    active: local
 
   jackson:
     property-naming-strategy: SNAKE_CASE
