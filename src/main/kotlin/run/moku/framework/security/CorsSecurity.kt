@@ -27,7 +27,9 @@ class CorsSecurity {
 
     companion object {
         private val ALLOWED_ORIGIN = listOf(
+            "https://dev-lkdcode.moku.run",
             "https://dev-lkdcode.moku.run:13000",
+
             "https://localhost:14000",
         )
 
