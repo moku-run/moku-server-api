@@ -33,17 +33,17 @@ abstract class BaseJpaEntity : Validatable {
     private var deletedAt: LocalDateTime? = null
 
     @PrePersist
-    fun prePersist() {
+    fun onCreate() {
         this.createdAt = nowKST()
         this.updatedAt = nowKST()
     }
 
     @PreUpdate
-    fun preUpdate() {
+    fun onUpdate() {
         this.updatedAt = nowKST()
     }
 
-    fun softDelete() {
+    fun delete() {
         this.isDeleted = true
         this.deletedAt = nowKST()
     }
@@ -51,4 +51,7 @@ abstract class BaseJpaEntity : Validatable {
     fun restore() {
         this.isDeleted = false
     }
+
+    fun isNotDeleted(): Boolean = !isDeleted
+    fun isDeleted(): Boolean = isDeleted
 }
