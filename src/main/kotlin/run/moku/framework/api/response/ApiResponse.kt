@@ -4,70 +4,73 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
-
 @JsonPropertyOrder("success", "code", "message", "payload")
-class ApiResponse<T> private constructor(
-    val success: Boolean,
+class ApiResponse<T>(
+    val success: Boolean = true,
     val code: String? = null,
     val message: String,
-    val payload: T?
+    val payload: T? = null,
 ) {
-
     companion object {
 
-        fun <T> of(
+        fun <T> ofDTO(
             success: Boolean,
-            status: HttpStatus,
-            message: String,
-            code: String,
+            apiCode: ApiResponseCode,
             payload: T? = null
-        ): ResponseEntity<ApiResponse<T>> = ResponseEntity
-            .status(status)
-            .body(ApiResponse(success, code, message, payload))
+        ): ApiResponse<T> = ApiResponse(success, apiCode.code, apiCode.message, payload)
 
         fun <T> success(
-            status: HttpStatus = HttpStatus.OK,
-            message: String = ApiResponseCode.OK.message,
-            code: String? = null,
+            apiCode: ApiResponseCode = ApiResponseCode.OK,
             payload: T? = null
         ): ResponseEntity<ApiResponse<T>> = ResponseEntity
-            .status(status)
-            .body(ApiResponse(true, code, message, payload))
+            .status(apiCode.status)
+            .body(
+                ApiResponse(
+                    code = apiCode.code,
+                    message = apiCode.message,
+                    payload = payload
+                )
+            )
 
-        fun <T> successCreated(
-            message: String,
-            code: String = ApiResponseCode.CREATED.code,
-            payload: T? = null
-        ): ResponseEntity<ApiResponse<T>> = ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(ApiResponse(true, code, message, payload))
+        fun <T> successCreated(payload: T? = null): ResponseEntity<ApiResponse<T>> = ResponseEntity
+            .status(ApiResponseCode.CREATED.status)
+            .body(
+                ApiResponse(
+                    code = ApiResponseCode.CREATED.code,
+                    message = ApiResponseCode.CREATED.message,
+                    payload = payload,
+                )
+            )
 
-        fun <T> successDeleted(
-            message: String,
-            code: String,
-            payload: T? = null
-        ): ResponseEntity<ApiResponse<T>> = ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
-            .body(ApiResponse(true, code, message, payload))
+        fun <T> successUpdated(payload: T? = null): ResponseEntity<ApiResponse<T>> = ResponseEntity
+            .status(ApiResponseCode.UPDATED.status)
+            .body(
+                ApiResponse(
+                    code = ApiResponseCode.UPDATED.code,
+                    message = ApiResponseCode.UPDATED.message,
+                    payload = payload,
+                )
+            )
+
+        fun <T> successDeleted(payload: T? = null): ResponseEntity<ApiResponse<T>> = ResponseEntity
+            .status(ApiResponseCode.DELETED.status)
+            .body(
+                ApiResponse(
+                    code = ApiResponseCode.DELETED.code,
+                    message = ApiResponseCode.DELETED.message,
+                    payload = payload,
+                )
+            )
 
         fun <T> clientError(
-            status: HttpStatus = HttpStatus.BAD_REQUEST,
-            message: String,
-            code: String,
-            payload: T? = null
-        ): ResponseEntity<ApiResponse<T>> = ResponseEntity
-            .status(status)
-            .body(ApiResponse(false, code, message, payload))
-
-        fun <T> clientError(
-            apiResponseCode: ApiResponseCode,
+            apiResponseCode: ApiResponseCode = ApiResponseCode.REQUEST_INVALID,
             payload: T? = null
         ): ResponseEntity<ApiResponse<T>> = ResponseEntity
             .status(apiResponseCode.status)
             .body(ApiResponse(false, apiResponseCode.code, apiResponseCode.message, payload))
 
         fun <T> serverError(
-            apiResponseCode: ApiResponseCode,
+            apiResponseCode: ApiResponseCode = ApiResponseCode.SEVER_UNHANDLED_EXCEPTION,
             payload: T? = null
         ): ResponseEntity<ApiResponse<T>> = ResponseEntity
             .status(apiResponseCode.status)

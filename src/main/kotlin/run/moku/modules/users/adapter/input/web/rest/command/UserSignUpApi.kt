@@ -1,4 +1,4 @@
-package run.moku.modules.users.adapter.input.rest.command
+package run.moku.modules.users.adapter.input.web.rest.command
 
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -6,15 +6,15 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import run.moku.framework.api.response.ApiResponse
-import run.moku.modules.users.adapter.input.rest.command.dto.UserCommandDto
-import run.moku.modules.users.application.ports.input.command.SignUpInputPort
+import run.moku.modules.users.adapter.input.web.rest.command.dto.UserCommandDto
+import run.moku.modules.users.application.ports.input.command.SignUpInput
 
 @RestController
 class UserSignUpApi(
-    private val signUpInPort: SignUpInputPort
+    private val signUpInPort: SignUpInput
 ) {
 
-    @PostMapping("/api/users")
+    @PostMapping("/api/users/sign-up")
     fun getSignUp(
         @Valid @RequestBody request: UserCommandDto.SignUpDTO
     ): ResponseEntity<ApiResponse<String>> {

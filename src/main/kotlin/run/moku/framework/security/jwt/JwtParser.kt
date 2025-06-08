@@ -9,17 +9,13 @@ class JwtParser(
     val jwtProperties: JwtProperties
 ) {
 
-    fun parse(value: String?): String? {
-        if (value != null && value.startsWith(JwtValues.TOKEN_PREFIX)) {
-            return value.substring(JwtValues.TOKEN_PREFIX.length);
-        }
+    fun getClaims(token: String): Claims =
+        Jwts.parser()
+            .verifyWith(jwtProperties.getSecretKey())
+            .build()
+            .parseSignedClaims(token)
+            .payload
 
-        return value
-    }
-
-    fun getClaims(token: String): Claims = Jwts.parser()
-        .verifyWith(jwtProperties.getSecretKey())
-        .build()
-        .parseSignedClaims(token)
-        .payload
+    fun getUsername(token: String): String =
+        getClaims(token).get(JwtValues.USERNAME_KEY, JwtValues.USERNAME_TYPE)
 }

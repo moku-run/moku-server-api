@@ -1,4 +1,4 @@
-package run.moku.modules.users.adapter.input.rest.command.dto
+package run.moku.modules.users.adapter.input.web.rest.command.dto
 
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Pattern
@@ -7,7 +7,7 @@ import run.moku.framework.api.exception.ApiException
 import run.moku.framework.api.response.ApiResponseCode
 import run.moku.modules.users.domain.entity.UserLoginId
 import run.moku.modules.users.domain.entity.UserNickname
-import run.moku.modules.users.domain.model.UserSignUpModel
+import run.moku.modules.users.application.usecase.command.signup.model.UserSignUpModel
 import run.moku.modules.users.domain.value.UserPassword
 
 interface UserCommandDto {

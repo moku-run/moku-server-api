@@ -1,6 +1,6 @@
-package run.moku.modules.users.application.usecase.signup.policy
+package run.moku.modules.users.application.usecase.command.signup.policy
 
-import run.moku.modules.users.domain.model.UserSignUpModel
+import run.moku.modules.users.application.usecase.command.signup.model.UserSignUpModel
 
 class SignUpUsecase private constructor(val model: UserSignUpModel) {
 

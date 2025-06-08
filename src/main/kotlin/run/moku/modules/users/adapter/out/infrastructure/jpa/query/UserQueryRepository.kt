@@ -9,20 +9,34 @@ import run.moku.modules.users.adapter.out.infrastructure.jpa.entity.UserJpaEntit
 
 interface UserQueryRepository : Repository<UserJpaEntity, Long> {
     fun findById(id: Long): UserJpaEntity?
-    fun findByLoginId(id: String?): UserJpaEntity?
-    fun findByNickname(id: String?): UserJpaEntity?
+    fun findByLoginId(loginId: String): UserJpaEntity?
+    fun findByNickname(nickname: String): UserJpaEntity?
     fun findAll(): List<UserJpaEntity>
 
-    @Query(value = "SELECT EXISTS (SELECT 1 FROM mst_users WHERE nickname = :nickname LIMIT 1)", nativeQuery = true)
+    @Query(
+        value = "SELECT EXISTS (SELECT 1 FROM mst_users WHERE nickname = :nickname LIMIT 1)",
+        nativeQuery = true
+    )
     fun existsByNicknameRaw(@Param("nickname") nickname: String): Int
 
-    @Query(value = "SELECT EXISTS (SELECT 1 FROM mst_users WHERE login_id = :loginId LIMIT 1)", nativeQuery = true)
+    @Query(
+        value = "SELECT EXISTS (SELECT 1 FROM mst_users WHERE login_id = :loginId LIMIT 1)",
+        nativeQuery = true
+    )
     fun existsByLoginIdRaw(@Param("loginId") loginId: String): Int
 }
 
-fun UserQueryRepository.loadByLoginId(id: String): UserJpaEntity =
-    findByLoginId(id) ?: throw ApiException(ApiResponseCode.NOT_FOUND_USER)
+fun UserQueryRepository.loadById(id: Long): UserJpaEntity =
+    findById(id) ?: throw ApiException(ApiResponseCode.NOT_FOUND_USER)
 
-fun UserQueryRepository.existsByNickname(nickname: String) = existsByNicknameRaw(nickname) > 0
+fun UserQueryRepository.loadByLoginId(loginId: String): UserJpaEntity =
+    findByLoginId(loginId) ?: throw ApiException(ApiResponseCode.NOT_FOUND_USER)
 
-fun UserQueryRepository.existsByLoginId(loginId: String) = existsByLoginIdRaw(loginId) > 0
+fun UserQueryRepository.loadByNickname(nickname: String): UserJpaEntity =
+    findByLoginId(nickname) ?: throw ApiException(ApiResponseCode.NOT_FOUND_USER)
+
+fun UserQueryRepository.existsByNickname(nickname: String): Boolean =
+    existsByNicknameRaw(nickname) > 0
+
+fun UserQueryRepository.existsByLoginId(loginId: String): Boolean =
+    existsByLoginIdRaw(loginId) > 0
