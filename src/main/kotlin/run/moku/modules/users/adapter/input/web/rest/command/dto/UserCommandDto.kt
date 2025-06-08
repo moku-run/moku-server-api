@@ -1,4 +1,4 @@
-package run.moku.modules.users.adapter.input.rest.command.dto
+package run.moku.modules.users.adapter.input.web.rest.command.dto
 
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Pattern

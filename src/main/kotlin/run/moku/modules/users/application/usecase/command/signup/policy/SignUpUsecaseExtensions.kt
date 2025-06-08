@@ -12,3 +12,6 @@ inline fun SignUpUsecase.checkDuplicateNickname(action: (UserNickname) -> Unit) 
 
 inline fun SignUpUsecase.signUp(action: (UserSignUpModel) -> Unit) =
     action(model)
+
+inline fun SignUpUsecase.publish(publish: (UserSignUpModel) -> Unit) =
+    publish(model)

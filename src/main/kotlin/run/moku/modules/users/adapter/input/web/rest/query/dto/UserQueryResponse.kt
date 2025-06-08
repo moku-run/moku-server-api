@@ -1,4 +1,4 @@
-package run.moku.modules.users.adapter.input.rest.query.dto
+package run.moku.modules.users.adapter.input.web.rest.query.dto
 
 import run.moku.modules.users.domain.value.UserRole
 
