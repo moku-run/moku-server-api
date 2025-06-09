@@ -1,7 +1,6 @@
 package run.moku.modules.users.domain.entity
 
-@JvmInline
-value class UserId private constructor(
+data class UserId (
     val value: Long
 ) {
     init {
