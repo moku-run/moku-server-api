@@ -6,6 +6,7 @@ import run.moku.modules.users.adapter.out.infrastructure.jpa.command.UserCommand
 import run.moku.modules.users.adapter.out.infrastructure.jpa.mapper.UserCommandMapper
 import run.moku.modules.users.application.ports.out.command.UserCommandPort
 import run.moku.modules.users.application.usecase.command.signup.model.UserSignUpModel
+import run.moku.modules.users.domain.entity.UserId
 
 @Service
 class UserCommandAdapter(
@@ -14,8 +15,9 @@ class UserCommandAdapter(
     private val passwordEncoder: PasswordEncoder,
 ) : UserCommandPort {
 
-    override fun registry(user: UserSignUpModel) = userMapper
+    override fun registry(user: UserSignUpModel): UserId = userMapper
         .convert(user)
         .apply { password = passwordEncoder.encode(password) }
-        .let(repository::save)
+        .let(repository::saveAndFlush)
+        .let { UserId.of(it.id!!) }
 }
