@@ -7,7 +7,7 @@ class SignUpUsecase private constructor(
     val model: UserSignUpModel
 ) {
 
-    var userId: UserId? = null
+    lateinit var userId: UserId
 
     companion object {
         fun execute(model: UserSignUpModel, block: SignUpUsecase.() -> Unit) =

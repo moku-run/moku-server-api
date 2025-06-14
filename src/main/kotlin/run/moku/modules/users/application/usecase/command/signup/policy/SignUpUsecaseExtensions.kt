@@ -16,4 +16,4 @@ inline fun SignUpUsecase.signUp(action: (UserSignUpModel) -> UserId) {
 }
 
 inline fun SignUpUsecase.publish(publish: (UserId) -> Unit) =
-    publish(userId!!)
+    publish(userId)
