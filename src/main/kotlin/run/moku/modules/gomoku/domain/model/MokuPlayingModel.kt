@@ -20,7 +20,7 @@ class MokuPlayingModel private constructor(
         mokuHistory.record(playStone)
         val result = mokuBoard.makeAJudgment(playStone)
 
-        return MokuPlayStatusModel(result,this)
+        return MokuPlayStatusModel(result, this)
     }
 
     fun getBoardIdValue() =

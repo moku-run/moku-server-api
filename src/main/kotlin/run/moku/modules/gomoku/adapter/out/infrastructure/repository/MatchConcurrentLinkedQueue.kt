@@ -8,6 +8,10 @@ import java.util.concurrent.ConcurrentLinkedQueue
 @Service
 class MatchConcurrentLinkedQueue {
 
+    fun isContains(player: MokuPlayer):Boolean{
+        return QUEUE.contains(player)
+    }
+
     fun addQueue(player: MokuPlayer) {
         QUEUE.add(player)
     }

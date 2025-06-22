@@ -11,9 +11,9 @@ import run.moku.modules.gomoku.domain.model.MokuPlayingModel
 class PlayQueryAdapter(
     private val repository: PlayConcurrentMap
 ) : PlayQueryPort {
+
     override fun getModel(boardId: BoardId): MokuPlayingModel =
         repository.loadById(boardId)
-
 
     override fun result(boardId: BoardId): MokuPlayStatusModel {
         TODO("Not yet implemented")

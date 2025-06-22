@@ -2,7 +2,6 @@ package run.moku.modules.gomoku.domain.model
 
 import run.moku.modules.gomoku.domain.entity.player.MokuPlayer
 import run.moku.modules.gomoku.domain.value.MokuPlayResult
-import run.moku.modules.gomoku.domain.value.MokuTurn
 
 class MokuPlayStatusModel(
     val result: MokuPlayResult,

@@ -12,6 +12,11 @@ class MokuTurn private constructor(
     var currentPlayer: MokuPlayer = blackStonePlayer.player,
 ) {
 
+    fun getCurrentStone(): MokuStone {
+        if (blackStonePlayer.player == currentPlayer) return MokuStone.BLACK_STONE
+        return MokuStone.WHITE_STONE
+    }
+
     fun change(playStone: MokuPlayStone) {
         if (playStone.mokuPlayer != currentPlayer) {
             throw IllegalArgumentException("차례가 아닙니다.")

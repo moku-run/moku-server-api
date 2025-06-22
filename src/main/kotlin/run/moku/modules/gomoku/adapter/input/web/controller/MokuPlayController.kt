@@ -1,6 +1,6 @@
 package run.moku.modules.gomoku.adapter.input.web.controller
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.context.event.EventListener
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler
@@ -14,7 +14,6 @@ import run.moku.modules.gomoku.application.ports.input.MatchInput
 import run.moku.modules.gomoku.application.ports.input.PlayInput
 import run.moku.modules.gomoku.domain.entity.board.BoardId
 import run.moku.modules.gomoku.domain.entity.player.MokuPlayer
-import run.moku.modules.gomoku.domain.model.MokuPlayingModel
 import run.moku.modules.gomoku.domain.value.MokuPlayResult
 import run.moku.modules.gomoku.domain.value.MokuStone
 import run.moku.modules.gomoku.domain.value.board.ColumnIndex
@@ -26,45 +25,9 @@ import java.security.Principal
 class MokuPlayController(
     private val matchInput: MatchInput,
     private val playInput: PlayInput,
-    private val messagingTemplate: SimpMessagingTemplate
+    private val messagingTemplate: SimpMessagingTemplate,
+    private val objectMapper: ObjectMapper
 ) {
-
-    @MessageMapping("/ready")
-    fun getReady(
-        principal: Principal
-    ) {
-        matchInput.addQueue(MokuPlayer(principal.name))
-
-        while (matchInput.getSize() >= 2) {
-            val mokuPlayingModel = matchInput.join()
-            convertAndSendToUser(mokuPlayingModel)
-        }
-    }
-
-    private fun convertAndSendToUser(model: MokuPlayingModel) {
-        val blackPlayer = model.getBlackPlayer()
-        val whitePlayer = model.getWhitePlayer()
-
-        messagingTemplate.convertAndSendToUser(
-            blackPlayer.id,
-            JOIN_PATH,
-            MatchingResultResponse(
-                blackPlayer.id,
-                model.getBoardIdValue(),
-                MokuStone.BLACK_STONE
-            )
-        )
-
-        messagingTemplate.convertAndSendToUser(
-            whitePlayer.id,
-            JOIN_PATH,
-            MatchingResultResponse(
-                whitePlayer.id,
-                model.getBoardIdValue(),
-                MokuStone.WHITE_STONE
-            )
-        )
-    }
 
     @MessageMapping("/room.{roomId}")
     fun sendMessageGo(
@@ -89,15 +52,13 @@ class MokuPlayController(
 
             val boardId = BoardId(roomId)
 
-            val result = playInput.play(
-                boardId, MokuPlayStone(
-                    RowIndex(row),
-                    ColumnIndex(col),
-                    MokuPlayer(principal.name)
-                )
+            val mokuPlayStone = MokuPlayStone(
+                RowIndex(row),
+                ColumnIndex(col),
+                MokuPlayer(principal.name)
             )
 
-            val jacksonObjectMapper = jacksonObjectMapper()
+            val result = playInput.play(boardId, mokuPlayStone)
 
             val historyResult = result.getBoardValue()
                 .map { row1 ->
@@ -110,15 +71,20 @@ class MokuPlayController(
                     }
                 }
 
+            val e = result.playingModel.mokuTurn.getCurrentStone()
+
             val response = PlayResponse(
                 result.result,
+                principal.name,
                 historyResult,
-                principal.name
+                row,
+                col,
+                e
             )
 
             messagingTemplate.convertAndSend(
                 "/topic/room.$roomId",
-                SendMessage(message.type, principal.name, jacksonObjectMapper.writeValueAsString(response))
+                SendMessage(message.type, principal.name, objectMapper.writeValueAsString(response))
             )
         }
     }
@@ -170,14 +136,14 @@ class MokuPlayController(
     }
 }
 
-data class MatchingResultResponse(
-    val id: String,
-    val roomId: String,
-    val stone: MokuStone
-)
-
 class PlayResponse(
     val result: MokuPlayResult,
-    val board: List<List<MokuStone?>>,
     val player: String,
+    val board: List<List<MokuStone?>>,
+    val lastRow: Int,
+    val lastCol: Int,
+    val currentStone: MokuStone,
+    // lastStone,
+    // nextStone,
+    //
 )

@@ -10,8 +10,11 @@ class MatchCommandAdapter(
     private val repository: MatchConcurrentLinkedQueue
 ) : MatchCommandPort {
 
-    override fun addQueue(player: MokuPlayer) =
-        repository.addQueue(player)
+    override fun addQueue(player: MokuPlayer) {
+        repository
+            .isContains(player)
+            .let { repository.addQueue(player) }
+    }
 
     override fun popUser(): MokuPlayer =
         repository.popUser()

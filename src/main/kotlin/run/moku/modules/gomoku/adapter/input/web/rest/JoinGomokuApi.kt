@@ -13,7 +13,6 @@ class JoinGomokuApi {
     fun getJoinGomoku(
         @AuthenticationPrincipal auth: AuthenticationDTO
     ) {
-//        println("hihihhihihihihi")
         println(auth)
     }
 }
