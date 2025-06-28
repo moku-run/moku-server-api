@@ -19,8 +19,10 @@ class SignUpService(
 
     override fun perform(model: UserSignUpModel) {
         SignUpUsecase.execute(model) {
+            checkPassword(validator::checkPassword)
             checkDuplicateLoginId(validator::checkDuplicateLoginId)
             checkDuplicateNickname(validator::checkDuplicateNickname)
+
             signUp(commandPort::registry)
             publish(eventPublisher::signUpEvent)
         }
