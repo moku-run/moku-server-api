@@ -1,14 +1,11 @@
 package run.moku.modules.gomoku.match.adapter.input.web.controller
 
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.messaging.handler.annotation.MessageMapping
-import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
+import run.moku.modules.gomoku.match.application.ports.out.command.MessageCommandPort
+import run.moku.modules.gomoku.match.application.usecase.command.join.MatchJoinService
+import run.moku.modules.gomoku.match.application.usecase.command.start.MatchStartService
 import run.moku.modules.gomoku.play.adapter.input.web.controller.MokuPlayController.Companion.JOIN_PATH
-import run.moku.modules.gomoku.match.application.ports.input.MatchInput
-import run.moku.modules.gomoku.match.application.ports.input.command.MatchCommandInput
-import run.moku.modules.gomoku.match.application.ports.input.query.MatchQueryInput
 import run.moku.modules.gomoku.play.domain.entity.MokuPlayer
 import run.moku.modules.gomoku.play.domain.model.MokuPlayingModel
 import run.moku.modules.gomoku.play.domain.value.MokuStone
@@ -16,83 +13,44 @@ import java.security.Principal
 
 @Controller
 class MokuMatchingController(
-    private val matchInput: MatchInput,
-    private val messagingTemplate: SimpMessagingTemplate,
+    private val matchJoinService: MatchJoinService,
+    private val matchService: MatchStartService,
 
-    private val matchCommandInput: MatchCommandInput,
-    private val matchQueryInput: MatchQueryInput,
+    private val messageCommandPort: MessageCommandPort,
 ) {
-
-    //    @MessageMapping("/ready")
-    fun getReady2(
-        principal: Principal,
-        httpServletResponse: HttpServletResponse,
-        httpServletRequest: HttpServletRequest,
-    ) {
-        matchCommandInput.addQueue(MokuPlayer(principal.name))
-
-        while (matchQueryInput.getQueueSize() >= 2) {
-            val mokuPlayingModel = matchInput.join()
-            convertAndSendToUser2(mokuPlayingModel)
-        }
-    }
-
-    private fun convertAndSendToUser2(model: MokuPlayingModel) {
-        val blackPlayer = model.getBlackPlayer()
-        val whitePlayer = model.getWhitePlayer()
-
-        matchCommandInput.sendToUser(
-            blackPlayer, JOIN_PATH, MatchingResultResponse(
-                blackPlayer.id,
-                model.getBoardIdValue(),
-                MokuStone.BLACK_STONE
-            )
-        )
-
-        matchCommandInput.sendToUser(
-            whitePlayer, JOIN_PATH,
-            MatchingResultResponse(
-                whitePlayer.id,
-                model.getBoardIdValue(),
-                MokuStone.WHITE_STONE
-            )
-        )
-    }
 
     @MessageMapping("/ready")
     fun getReady(
         principal: Principal
     ) {
-        matchInput.addQueue(MokuPlayer(principal.name))
-
-        while (matchInput.getSize() >= 2) {
-            val mokuPlayingModel = matchInput.join()
-            convertAndSendToUser(mokuPlayingModel)
-        }
+        matchJoinService.join(MokuPlayer(principal.name))
+        matchService.start(
+            ::convertAndSendToWhitePlayer,
+            ::convertAndSendToBlackPlayer,
+        )
     }
 
-    private fun convertAndSendToUser(model: MokuPlayingModel) {
-        val blackPlayer = model.getBlackPlayer()
+    private fun convertAndSendToWhitePlayer(model: MokuPlayingModel) {
         val whitePlayer = model.getWhitePlayer()
 
-        messagingTemplate.convertAndSendToUser(
-            blackPlayer.id,
-            JOIN_PATH,
-            MatchingResultResponse(
-                blackPlayer.id,
-                model.getBoardIdValue(),
-                MokuStone.BLACK_STONE
-            )
-        )
+        send(whitePlayer, model, MokuStone.WHITE_STONE)
+    }
 
-        messagingTemplate.convertAndSendToUser(
-            whitePlayer.id,
+    private fun convertAndSendToBlackPlayer(model: MokuPlayingModel) {
+        val blackPlayer = model.getBlackPlayer()
+
+        send(blackPlayer, model, MokuStone.BLACK_STONE)
+    }
+
+    private fun send(
+        player: MokuPlayer,
+        model: MokuPlayingModel,
+        stone: MokuStone
+    ) {
+        messageCommandPort.send(
+            player,
             JOIN_PATH,
-            MatchingResultResponse(
-                whitePlayer.id,
-                model.getBoardIdValue(),
-                MokuStone.WHITE_STONE
-            )
+            MatchingResultResponse(player.id, model.getBoardIdValue(), stone)
         )
     }
 }
