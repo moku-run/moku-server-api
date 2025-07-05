@@ -31,6 +31,8 @@ class CorsSecurity {
             "https://dev-lkdcode.moku.run:13000",
 
             "https://localhost:14000",
+            "https://localhost:13000",
+            "https://localhost:12000",
         )
 
         //        private val ALLOWED_HEADER = listOf("Content-Type", "Authorization", "X-Requested-With")

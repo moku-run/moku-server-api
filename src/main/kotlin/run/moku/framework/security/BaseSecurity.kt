@@ -13,27 +13,34 @@ class BaseSecurity(
 
     private val baseAuthenticationEntryPoint: ApiAuthenticationEntryPoint,
     private val baseAccessDeniedHandler: ApiAccessDeniedHandler,
+    private var isActive: Boolean = false
 ) : AbstractHttpConfigurer<BaseSecurity, HttpSecurity>() {
 
     override fun init(http: HttpSecurity) {
-        http
-            .exceptionHandling {
-                it.authenticationEntryPoint(baseAuthenticationEntryPoint)
-                    .accessDeniedHandler(baseAccessDeniedHandler)
-            }
+        if (isActive) {
+            http
+                .exceptionHandling {
+                    it.authenticationEntryPoint(baseAuthenticationEntryPoint)
+                        .accessDeniedHandler(baseAccessDeniedHandler)
+                }
 
-            .cors { it.configurationSource(corsSecurity.corsConfigurationSource()) }
-            .csrf { it.disable() }
-            .formLogin { it.disable() }
-            .securityContext { it.disable() }
+                .cors { it.configurationSource(corsSecurity.corsConfigurationSource()) }
+                .csrf { it.disable() }
+                .formLogin { it.disable() }
+                .securityContext { it.disable() }
 
-            .sessionManagement {
-                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .sessionFixation { sessionFixation -> sessionFixation.none() }
-            }
+                .sessionManagement {
+                    it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionFixation { sessionFixation -> sessionFixation.none() }
+                }
 
-            .headers {
-                it.frameOptions { option -> option.disable() }
-            }
+                .headers {
+                    it.frameOptions { option -> option.disable() }
+                }
+        }
+    }
+
+    fun active() {
+        this.isActive = true
     }
 }

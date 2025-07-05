@@ -1,6 +1,7 @@
 package run.moku.framework.security.jwt
 
 import org.springframework.stereotype.Service
+import run.moku.framework.security.auth.AuthenticationDTO
 
 @Service
 class JwtService(
@@ -14,6 +15,13 @@ class JwtService(
         creator.create(
             mutableMapOf(
                 JwtValues.USERNAME_KEY to username,
+            )
+        )
+
+    fun createToken(auth: AuthenticationDTO): String =
+        creator.create(
+            mutableMapOf(
+                JwtValues.USERNAME_KEY to auth.username,
             )
         )
 
