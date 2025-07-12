@@ -18,7 +18,7 @@ class ApiAuthenticationEntryPoint(
         response: HttpServletResponse?,
         authException: AuthenticationException?
     ) {
-        log().info("$authException")
+        log().info("${authException?.message}")
 
         apiResponseService.writeResponse<Unit>(
             response = response,

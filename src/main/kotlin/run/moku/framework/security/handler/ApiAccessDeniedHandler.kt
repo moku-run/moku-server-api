@@ -18,7 +18,7 @@ class ApiAccessDeniedHandler(
         response: HttpServletResponse?,
         accessDeniedException: AccessDeniedException?
     ) {
-        log().info("$accessDeniedException")
+        log().info("${accessDeniedException?.message}")
 
         apiResponseService.writeResponse<Unit>(
             response = response,

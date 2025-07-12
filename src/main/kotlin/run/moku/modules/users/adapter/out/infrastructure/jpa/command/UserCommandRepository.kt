@@ -5,4 +5,5 @@ import run.moku.modules.users.adapter.out.infrastructure.jpa.entity.UserJpaEntit
 
 interface UserCommandRepository : Repository<UserJpaEntity, Long> {
     fun save(entity: UserJpaEntity)
+    fun saveAndFlush(entity: UserJpaEntity): UserJpaEntity
 }

@@ -3,12 +3,11 @@ package run.moku.modules.users.adapter.input.web.rest.command.dto
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
-import run.moku.framework.api.exception.ApiException
-import run.moku.framework.api.response.ApiResponseCode
+import run.moku.modules.users.application.usecase.command.signup.model.UserSignUpModel
 import run.moku.modules.users.domain.entity.UserLoginId
 import run.moku.modules.users.domain.entity.UserNickname
-import run.moku.modules.users.application.usecase.command.signup.model.UserSignUpModel
 import run.moku.modules.users.domain.value.UserPassword
+import run.moku.modules.users.domain.value.UserPasswordConfirm
 
 interface UserCommandDto {
     data class SignUpDTO(
@@ -34,13 +33,11 @@ interface UserCommandDto {
         @field:Pattern(regexp = UserPassword.PATTERN_STRING, message = UserPassword.VALID_PATTERN_MESSAGE)
         val passwordConfirm: String,
     ) {
-        init {
-            require(password == passwordConfirm) { throw ApiException(ApiResponseCode.MISMATCH_PASSWORD_AND_PASSWORD_CONFIRM) }
-        }
 
         fun convert() = UserSignUpModel(
             UserLoginId.of(loginId),
             UserPassword.of(password),
+            UserPasswordConfirm.of(passwordConfirm),
             UserNickname.of(nickname),
         )
     }

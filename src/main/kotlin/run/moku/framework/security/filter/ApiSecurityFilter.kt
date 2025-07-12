@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import run.moku.framework.security.BaseSecurity
+import run.moku.framework.security.jwt.JwtValues
 
 @Configuration
 class ApiSecurityFilter(
@@ -22,11 +23,14 @@ class ApiSecurityFilter(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain =
         http
             .securityMatcher(ALL_URL)
-            .also { baseSecurity.init(it) }
+            .with(baseSecurity, BaseSecurity::active)
+
             .logout {
                 it
                     .logoutUrl("/api/logout")
                     .addLogoutHandler(jwtLogoutFilter)
+                    .deleteCookies(JwtValues.AUTHENTICATION_HEADER)
+                    .invalidateHttpSession(true)
                     .logoutSuccessHandler(jwtLogoutSuccessHandler)
             }
 
@@ -47,8 +51,10 @@ class ApiSecurityFilter(
 
         private val PERMIT_ALL_API = arrayOf(
             "/",
+            "/ws", "/ws/**",
             "/api/users/sign-up",
             "/api/logout", "/api/login",
+            "/api/moku/*/details"
         )
 
         private val AUTHENTICATED_API = arrayOf(

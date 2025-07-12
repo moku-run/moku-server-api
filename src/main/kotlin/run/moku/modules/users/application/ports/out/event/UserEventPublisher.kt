@@ -1,7 +1,7 @@
 package run.moku.modules.users.application.ports.out.event
 
-import run.moku.modules.users.application.usecase.command.signup.model.UserSignUpModel
+import run.moku.modules.users.domain.entity.UserId
 
 interface UserEventPublisher {
-    fun signUpEvent(model: UserSignUpModel)
+    fun signUpEvent(userId: UserId)
 }
